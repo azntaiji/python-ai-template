@@ -32,6 +32,9 @@ never commit it.
 cp .env.example .env
 ```
 
+Code reads configuration through `src/<package_name>/config.py` — see the
+`get_env` helper there; never call `os.getenv` elsewhere.
+
 ## Usage
 
 ```bash
