@@ -11,6 +11,9 @@ venv/
 # OS / editor noise
 .DS_Store
 
+# Output directories (created at runtime)
+out/
+
 # Build artifacts
 dist/
 build/

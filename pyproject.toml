@@ -16,7 +16,7 @@ dev = [
 ]
 
 [project.scripts]
-<package_name> = "<package_name>.cli:main"
+"<package_name>" = "<package_name>.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

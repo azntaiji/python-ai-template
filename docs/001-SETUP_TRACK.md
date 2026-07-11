@@ -1,9 +1,44 @@
 # 001 - Setup Track
 
-## Task 1 - Initialize Virtual environment, direnv, pip
+## Read first
+
+`AGENTS.md`, `STATE.md`. Do not read other track files.
+
+## Done when
+
+- [ ] All five Tasks below are marked complete in `STATE.md`
+- [ ] `.venv/bin/<package_name>` prints the placeholder CLI message
+- [ ] `git log` shows one commit per completed Task
+- [ ] No literal placeholder strings remain anywhere in the repository
+
+## Task 1 - Git init and initial commit
+
+**Files:** none (repository state only)
+
+**Steps:**
+
+1. If a `.git` directory already exists, skip `git init` and go to step 3.
+2. Run `git init`.
+3. Run `git status` and confirm no `.venv/`, `.env`, `out/`, or `*.egg-info/`
+   entries appear. If any appear, `.gitignore` is missing or wrong — fix it
+   before committing.
+4. Run:
+
+```bash
+git add -A
+git commit -m "Initial commit"
+```
+
+**Verify:** `git log --oneline` shows at least one commit.
+
+## Task 2 - Initialize virtual environment, direnv, pip
 
 Use `python3` for the system interpreter here (on many systems no bare `python`
-command exists); after this Task, always invoke the venv interpreter directly. Run:
+command exists); after this Task, always invoke the venv interpreter directly.
+
+**Files:** `.envrc` (created)
+
+**Steps:**
 
 ```bash
 python3 -m venv .venv
@@ -12,7 +47,11 @@ direnv allow
 .venv/bin/python -m pip install --upgrade pip
 ```
 
-## Task 2 - Project and Package Naming
+**Verify:** `.venv/bin/python --version` prints Python 3.11 or newer.
+
+## Task 3 - Project and Package Naming
+
+**Files:** none (this Task only settles names; Task 4 applies them)
 
 Ask the user for:
 
@@ -24,35 +63,52 @@ Ask the user for:
 
 If the user has already stated one or both in the conversation, confirm rather than
 re-ask. If they provide only one name, propose the other by normalizing it (hyphens ↔
-underscores) and confirm. Do not proceed to Task 2 until both names are settled.
+underscores) and confirm. If no user is available to answer, use the repository
+directory name as the project name and derive the package name from it by replacing
+hyphens with underscores.
 
-Everywhere in the project, `<project_name>` and `<package_name>` mean these confirmed values —
-never leave literal placeholders in generated files.
+Record both names in `STATE.md` under "Completed Tasks" when marking this Task done.
+Do not proceed to Task 4 until both names are settled.
 
-## Task 3 - Rename placeholders
+Everywhere in the project, `<project_name>` and `<package_name>` mean these confirmed
+values — never leave literal placeholders in generated files.
 
-Replace all `<project_name>`, `<package_name>`, `project_name`, and `package_name` placeholders throughout the repository with the normalized name from Task 2.
+**Verify:** Both names are recorded in `STATE.md`, and the package name is a valid
+Python identifier.
 
-## Task 4 - Install the package
+## Task 4 - Rename placeholders
+
+Using the two names confirmed in Task 3:
+
+**Files:** all files containing placeholders, plus the `src/package_name/` directory
+
+**Steps:**
+
+1. Rename the directory `src/package_name/` to `src/<package_name>/`
+   (the confirmed package name).
+2. In every file in the repository, replace:
+   - `<project_name>` and `project_name` → the project name (hyphens allowed)
+   - `<package_name>` and `package_name` → the package name (underscores)
+
+**Verify:**
+
+```bash
+grep -rn "package_name\|project_name" . --exclude-dir=.venv --exclude-dir=.git
+```
+
+must return no matches.
+
+## Task 5 - Install the package
 
 Install the package in editable mode so the CLI alias actually works:
+
+**Files:** none (environment state only)
+
+**Steps:**
 
 ```bash
 .venv/bin/python -m pip install -e .
 ```
 
-Verify with `.venv/bin/<package_name>` (should print the placeholder message).
-
-## Task 5 - Git init and initial commit
-
-Run:
-
-```bash
-git init
-git add -A
-git commit -m "Initial commit"
-```
-
-Before committing, confirm `git status` shows no `.venv/`, `.env`, `out/`, or
-`*.egg-info/` entries — if any appear, `.gitignore` is missing or
-wrong; fix it before committing.
+**Verify:** `.venv/bin/<package_name>` prints the placeholder CLI message and
+exits without error.

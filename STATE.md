@@ -1,32 +1,37 @@
 # STATE.md
 
-## Current Status
-
-Scaffold ready. Awaiting first task.
-
 ## Current Track
 
-No active track. Create a track file in `docs/` and set it here when ready.
-
-When this track completes, move to the next track in the chain.
-
-The track chain is:
-
-1. (No tracks defined yet)
-
-## Source of Truth
-
-Read these in order:
-
-1. AGENTS.md
-2. PLAN.md
-3. The active track file (see "Current Track" above)
-4. STATE.md
+docs/001-SETUP_TRACK.md
 
 ## Next Task
 
-—
+Task 1 - Git init and initial commit
 
 ## Completed Tasks
 
-—
+(none)
+
+## Blockers
+
+(none)
+
+## Track Chain
+
+1. docs/001-SETUP_TRACK.md  ← active
+2. (add the next track here when created)
+
+## After finishing a Task (do all of these, in order)
+
+1. Run the Task's Verify step. If it fails, the Task is NOT complete — see
+   docs/ERROR_RECOVERY.md.
+2. Move the finished Task to "Completed Tasks" above, with a one-line summary.
+3. Set "Next Task" to the next Task in the Current Track file. If none remain,
+   set "Current Track" to the next file in "Track Chain" and "Next Task" to its
+   Task 1.
+4. Bump `version` in `pyproject.toml` AND `__version__` in
+   `src/<package_name>/__init__.py` per docs/VERSIONING_RULES.md. The two values
+   must be identical.
+5. Update `README.md` if installation, configuration, or run commands changed.
+6. If a `.git` directory exists, commit all changes with a message naming the
+   Task. If it does not exist yet, skip this step (the setup track creates it).
