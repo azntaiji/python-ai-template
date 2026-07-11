@@ -8,8 +8,9 @@
 
 - [ ] All five Tasks below are marked complete in `STATE.md`
 - [ ] `.venv/bin/<package_name>` prints the placeholder CLI message
-- [ ] `git log` shows one commit per completed Task
-- [ ] No literal placeholder strings remain anywhere in the repository
+- [ ] `git log` shows at least one commit per completed Task
+- [ ] No literal placeholder strings remain outside `docs/001-SETUP_TRACK.md`
+      (this file keeps its generic wording — see Task 4)
 
 ## Task 1 - Git init and initial commit
 
@@ -63,24 +64,28 @@ direnv allow
 
 ## Task 3 - Project and Package Naming
 
-**Files:** none (this Task only settles names; Task 4 applies them)
+**Files:** `STATE.md`
 
-Ask the user for:
+**Steps:**
 
-1. **Project name** — the distribution name used in `pyproject.toml` and typically the
-   repository/directory name. May contain hyphens (e.g., `data-pipeline`).
-2. **Package name** — the importable package directory under `src/`. Must be a valid
-   Python identifier: lowercase, underscores instead of hyphens, no leading digits
-   (e.g., `data_pipeline`).
+1. If the Architecture section of `PLAN.md` contains a `Names:` line, use
+   those two names and skip to step 2. Otherwise ask the user for:
+   - **Project name** — the distribution name used in `pyproject.toml` and typically
+     the repository/directory name. May contain hyphens (e.g., `data-pipeline`).
+   - **Package name** — the importable package directory under `src/`. Must be a valid
+     Python identifier: lowercase, underscores instead of hyphens, no leading digits
+     (e.g., `data_pipeline`).
 
-If the user has already stated one or both in the conversation, confirm rather than
-re-ask. If they provide only one name, propose the other by normalizing it (hyphens ↔
-underscores) and confirm. If no user is available to answer, use the repository
-directory name as the project name and derive the package name from it by replacing
-hyphens with underscores.
+   If the user has already stated one or both in the conversation, confirm rather
+   than re-ask. If they provide only one name, propose the other by normalizing it
+   (hyphens ↔ underscores) and confirm. If no user is available to answer, use the
+   repository directory name as the project name and derive the package name from it
+   by replacing hyphens with underscores.
 
-Record both names in `STATE.md` under "Completed Tasks" when marking this Task done.
-Do not proceed to Task 4 until both names are settled.
+2. Record both names now, on one line under "Completed Tasks" in `STATE.md`
+   (e.g., `Task 3 — names settled: project=data-pipeline, package=data_pipeline`).
+   Do this before running Verify. Do not proceed to Task 4 until both names are
+   settled.
 
 Everywhere in the project, `<project_name>` and `<package_name>` mean these confirmed
 values — never leave literal placeholders in generated files.
@@ -93,19 +98,23 @@ Python identifier.
 Using the two names confirmed in Task 3:
 
 **Files:** all files containing placeholders, plus the `src/package_name/` directory
+(this Task is the one allowed exception to the 5-file rule — the rename must be
+atomic)
 
 **Steps:**
 
 1. Rename the directory `src/package_name/` to `src/<package_name>/`
    (the confirmed package name).
-2. In every file in the repository, replace:
+2. In every file in the repository EXCEPT this one (`docs/001-SETUP_TRACK.md`
+   keeps its generic wording), replace:
    - `<project_name>` and `project_name` → the project name (hyphens allowed)
    - `<package_name>` and `package_name` → the package name (underscores)
 
 **Verify:**
 
 ```bash
-grep -rn "package_name\|project_name" . --exclude-dir=.venv --exclude-dir=.git
+grep -rn "package_name\|project_name" . \
+  --exclude-dir=.venv --exclude-dir=.git --exclude=001-SETUP_TRACK.md
 ```
 
 must return no matches.

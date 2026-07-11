@@ -13,7 +13,7 @@ Exactly two places, and they must always match:
 Update both in the same change, then verify they match:
 
 ```bash
-python3 - << 'EOF'
+.venv/bin/python - << 'EOF'
 import pathlib, re, tomllib
 
 v1 = tomllib.load(open("pyproject.toml", "rb"))["project"]["version"]

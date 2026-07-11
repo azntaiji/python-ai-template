@@ -29,7 +29,7 @@ These apply to all work in this repository, at all times:
 .
 ├── .env                Local secrets (not committed; copy from .env.example)
 ├── .env.example
-├── .envrc              Optional; created by the setup track (Task 2) if direnv is installed
+├── .envrc              Optional; created by setup Task 2 if direnv is installed (not committed)
 ├── .gitignore
 ├── AGENTS.md
 ├── PLAN.md             **North star** — goal, scope, architecture, backlog, done criteria

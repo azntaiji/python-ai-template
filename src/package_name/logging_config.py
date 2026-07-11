@@ -1,3 +1,9 @@
+"""Centralized logging configuration — see docs/LOGGING_RULES.md.
+
+All handler and level configuration lives here; other modules only do
+`logger = logging.getLogger(__name__)`.
+"""
+
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -5,10 +11,21 @@ from pathlib import Path
 LOG_DIR = Path("out/logs")
 
 def setup_logging(level: int = logging.DEBUG) -> None:
-    """Call once at application startup (e.g., in __main__.py or CLI entrypoint)."""
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    """Configure root logging with rotating file and console handlers.
 
+    Call once at application startup (e.g., in __main__.py or a CLI
+    entrypoint). Safe to call again: repeat calls are no-ops, so handlers
+    are never duplicated.
+
+    Args:
+        level: Root logger level; handlers filter further (file DEBUG+,
+            console INFO+).
+    """
     root = logging.getLogger()
+    if root.handlers:
+        return
+
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
     root.setLevel(level)
 
     # Rotate at 5 MB, keep 5 backups

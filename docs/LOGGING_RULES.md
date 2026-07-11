@@ -17,9 +17,10 @@ from <package_name>.logging_config import setup_logging
 setup_logging()
 ```
 
-Library code and importable modules never call it. Duplicate setup calls or
-stray `addHandler` calls cause duplicated log lines — if you see repeated
-output, look for a second setup call.
+Library code and importable modules never call it. `setup_logging()` is a
+no-op when handlers already exist, but stray `addHandler` calls elsewhere
+cause duplicated log lines — if you see repeated output, look for handler
+configuration outside `logging_config.py`.
 
 ## In every module that logs
 

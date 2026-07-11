@@ -29,9 +29,10 @@ Task 1 - Git init and initial commit
 3. Set "Next Task" to the next Task in the Current Track file. If none remain,
    set "Current Track" to the next file in "Track Chain" and "Next Task" to its
    Task 1.
-4. Bump `version` in `pyproject.toml` AND `__version__` in
+4. If the Task changed package code (files under `src/` or `tests/`), bump
+   `version` in `pyproject.toml` AND `__version__` in
    `src/<package_name>/__init__.py` per docs/VERSIONING_RULES.md. The two values
-   must be identical.
+   must be identical. Setup, docs, and configuration Tasks do not bump.
 5. Update `README.md` if installation, configuration, or run commands changed.
 6. If a `.git` directory exists, commit all changes with a message naming the
    Task. If it does not exist yet, skip this step (the setup track creates it).

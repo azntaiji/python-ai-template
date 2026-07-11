@@ -49,6 +49,10 @@ Code reads configuration through `src/<package_name>/config.py` — see the
 - Run tests: `.venv/bin/pytest`
 - Logs are written to `out/logs/app.log` (rotating; not committed)
 - Agents and contributors: start with `AGENTS.md`
+- Agent session prompts: `etc/PROMPT_0_KICKOFF.md` (first session) or
+  `etc/PROMPT_0_FRONTIER.md` (first session via a frontier model, which also
+  writes the implementation tracks), then `etc/PROMPT_RESUME.md` for every
+  session after
 
 ## Contact
 
