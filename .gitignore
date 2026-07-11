@@ -11,16 +11,13 @@ venv/
 # OS / editor noise
 .DS_Store
 
-# Output directories
-out/
-
 # Build artifacts
 dist/
 build/
 *.egg-info/
 
-# Others
-etc/
-
 # VSCode workspace files
 *.code-workspace
+
+# Internal dev
+REVIEW.md
