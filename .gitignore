@@ -1,0 +1,26 @@
+# Bytecode and venvs
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+
+# Env and secrets
+.env
+
+# OS / editor noise
+.DS_Store
+
+# Output directories
+out/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Others
+etc/
+
+# VSCode workspace files
+*.code-workspace
