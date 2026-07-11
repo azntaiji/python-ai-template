@@ -16,7 +16,7 @@ topic comes up (see Conventions below).
 
 These apply to all work in this repository, at all times:
 
-- Use `python3` for the system interpreter and always invoke the venv interpreter directly (`.venv/bin/python`, `.venv/bin/python -m pip`) rather than relying on shell activation, since activation does not persist across separate command invocations. Interactive users get activation automatically via direnv when they `cd` into the project.
+- Use `python3` for the system interpreter and always invoke the venv interpreter directly (`.venv/bin/python`, `.venv/bin/python -m pip`) rather than relying on shell activation, since activation does not persist across separate command invocations. (Interactive users who have direnv installed get activation automatically when they `cd` into the project; agents must never depend on this.)
 - Use Python and Python libraries to develop the project unless otherwise specified.
 - Write Google-style docstrings for all functions (and for classes and modules where non-trivial).
 - **Logging** — before adding any diagnostic output, read `docs/LOGGING_RULES.md` and follow it.
@@ -29,10 +29,10 @@ These apply to all work in this repository, at all times:
 .
 ├── .env                Local secrets (not committed; copy from .env.example)
 ├── .env.example
-├── .envrc              Created by the setup track (Task 2)
+├── .envrc              Optional; created by the setup track (Task 2) if direnv is installed
 ├── .gitignore
 ├── AGENTS.md
-├── PLAN.md             **North star** — goal, scope, backlog, done criteria
+├── PLAN.md             **North star** — goal, scope, architecture, backlog, done criteria
 ├── pyproject.toml
 ├── README.md
 ├── STATE.md            Current track, next task, post-task checklist
@@ -65,7 +65,7 @@ Tracks are named `docs/NNN-NAME_TRACK.md` with zero-padded, three-digit indices 
 
 ### Document Roles
 
-- **`PLAN.md` (root)** — North star. Goal, scope, backlog, and done criteria for the entire project. Read this to understand *what* we're building.
+- **`PLAN.md` (root)** — North star. Goal, scope, architecture decisions, backlog, and done criteria for the entire project. Read this to understand *what* we're building.
 - **`docs/NNN-*_TRACK.md`** — Implementation tracks. Ordered Tasks with acceptance criteria for a specific phase. Read the active one to understand *how* to build the next piece.
 - **`STATE.md`** — Pointer. Which track is active, what's the next task, what's done. Read this to know *where* to work next.
 
@@ -85,7 +85,7 @@ Tracks are named `docs/NNN-NAME_TRACK.md` with zero-padded, three-digit indices 
 - Keep source files under 400 lines. If a file grows beyond that, split it.
 - Use explicit types where possible.
 - For Tasks that change package code, write or update tests before implementation. Setup, configuration, and documentation Tasks need no tests.
-- Durable context lives in repository files, not chat history. When implementation diverges from the docs, update the docs immediately. Record material architecture decisions in `PLAN.md` before moving on.
+- Durable context lives in repository files, not chat history. When implementation diverges from the docs, update the docs immediately. Record material architecture decisions in the "Architecture" section of `PLAN.md` before moving on, and read that section before designing new components.
 - Ask before destructive actions, broad refactors, adding dependencies, or changing public contracts. Shell commands listed in the active track file are pre-authorized.
 - After each Task, report: files changed, tests added/updated, Verify result, open issues.
 

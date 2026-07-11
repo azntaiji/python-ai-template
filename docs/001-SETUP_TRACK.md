@@ -31,21 +31,33 @@ git commit -m "Initial commit"
 
 **Verify:** `git log --oneline` shows at least one commit.
 
-## Task 2 - Initialize virtual environment, direnv, pip
+## Task 2 - Initialize virtual environment and pip
 
 Use `python3` for the system interpreter here (on many systems no bare `python`
 command exists); after this Task, always invoke the venv interpreter directly.
 
-**Files:** `.envrc` (created)
+**Files:** `.envrc` (created, only if direnv is installed)
 
 **Steps:**
 
+1. Run:
+
 ```bash
 python3 -m venv .venv
-echo 'source .venv/bin/activate' > .envrc
-direnv allow
 .venv/bin/python -m pip install --upgrade pip
 ```
+
+2. Optional, for interactive shell convenience only. If `direnv` is installed
+   (check with `command -v direnv`), run:
+
+```bash
+echo 'source .venv/bin/activate' > .envrc
+direnv allow
+```
+
+   If `direnv` is not installed, skip this step entirely — do not install it
+   and do not record a Blocker. Agents and scripts never rely on it; they
+   invoke `.venv/bin/python` directly.
 
 **Verify:** `.venv/bin/python --version` prints Python 3.11 or newer.
 
