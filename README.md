@@ -25,15 +25,13 @@ For development (adds pytest):
 
 ## Configuration
 
-Copy `.env.example` to `.env` and fill in the values. `.env` is gitignored —
-never commit it.
+Copy `.env.example` to `.env` and fill in the values. `.env` is gitignored — never commit it.
 
 ```bash
 cp .env.example .env
 ```
 
-Code reads configuration through `src/<package_name>/config.py` — see the
-`get_env` helper there; never call `os.getenv` elsewhere.
+Code reads configuration through `src/<package_name>/config.py` — see the `get_env` helper there; never call `os.getenv` elsewhere.
 
 ## Usage
 
@@ -49,10 +47,7 @@ Code reads configuration through `src/<package_name>/config.py` — see the
 - Run tests: `.venv/bin/pytest`
 - Logs are written to `out/logs/app.log` (rotating; not committed)
 - Agents and contributors: start with `AGENTS.md`
-- Agent session prompts: `etc/PROMPT_0_KICKOFF.md` (first session) or
-  `etc/PROMPT_0_FRONTIER.md` (first session via a frontier model, which also
-  writes the implementation tracks), then `etc/PROMPT_RESUME.md` for every
-  session after
+- Agent session prompts: `etc/PROMPT_0_KICKOFF.md` (first session) or `etc/PROMPT_0_FRONTIER.md` (first session via a frontier model, which also writes the implementation tracks), then `etc/PROMPT_RESUME.md` for every session after
 
 ## Contact
 

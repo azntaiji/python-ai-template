@@ -22,7 +22,11 @@
 1. <one command or one edit per step>
 2. <...>
 
-**Verify:** <exact command to run and the expected output>
+**Verify:** run
+
+<exact command to run as a single fenced code block>
+
+Expected: <a literal expected-output line>
 
 ## Task 2 - <imperative title>
 
@@ -32,4 +36,8 @@
 
 1. <...>
 
-**Verify:** <...>
+**Verify:** run
+
+<...>
+
+Expected: <...>

@@ -23,5 +23,8 @@ build/
 # VSCode workspace files
 *.code-workspace
 
-# Internal dev
+# Internal dev and testing/example docs
 REVIEW.md
+00[2-9]*-*.md
+PLAN.md.example
+STATE.md.example
