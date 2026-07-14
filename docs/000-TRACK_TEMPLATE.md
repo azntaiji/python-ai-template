@@ -1,7 +1,7 @@
 # NNN - <Track Name>
 
 <!-- Copy this file to docs/NNN-NAME_TRACK.md when starting a new phase.
-     Fill every section. Delete these comments. Keep the file under 300 lines. -->
+     Fill every section. Delete these comments. Keep the file under 150 lines. -->
 
 ## Read first
 

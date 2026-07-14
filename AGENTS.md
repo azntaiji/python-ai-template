@@ -5,14 +5,14 @@
 ## Working Session (read in this order, nothing else)
 
 1. `AGENTS.md` — this file: rules and repository map
-2. `PLAN.md` — goal and scope (skim)
-3. `STATE.md` — current track, next task, post-task checklist
-4. The active track file named in `STATE.md` under "Current Track"
+2. `STATE.md` — current track, next task, post-task checklist
+3. The active track file named in `STATE.md` under "Current Track"
 
-Do not load other track files. Load the rule files in `docs/` only when their
-topic comes up (see Conventions below).
+Do not load other track files. Load the rule files in `docs/` only when their topic comes up (see Conventions below).
 
 Repository map, document roles, and track mechanics live in `docs/REFERENCE.md`. You do not need it for normal Task execution — the active track file names every path you need. Open it only if you're lost about where something lives.
+
+Skim `PLAN.md` only when designing new components or making architecture decisions.
 
 ## Conventions
 
@@ -30,7 +30,7 @@ These apply to all work in this repository, at all times:
 - Implement Tasks in order. Do not skip Tasks.
 - Do not implement features outside the active track.
 - Each Task should change at most 5 files. If more are needed, split the Task.
-- Each track file should stay under 300 lines. If a track grows beyond that, break it into multiple track files in the same phase.
+- Each track file should stay under 150 lines. If a track grows beyond that, break it into multiple track files in the same phase.
 - Create new track files from `docs/000-TRACK_TEMPLATE.md`. When starting a new phase: create the track file in `docs/`, add it to "Track Chain" in `STATE.md`, and update the `PLAN.md` backlog status if needed.
 
 ## Operating Rules
@@ -47,6 +47,4 @@ These apply to all work in this repository, at all times:
 
 ## Post-Task Completion
 
-After implementing a Task, complete the checklist at the bottom of `STATE.md`
-("After finishing a Task"). This ensures a fresh session can resume from the
-correct task.
+After implementing a Task, follow the "HOW TO FINISH A TASK" block at the top of `STATE.md`. This ensures a fresh session can resume from the correct task.

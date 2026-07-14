@@ -90,21 +90,20 @@ Everywhere in the project, `<project_name>` and `<package_name>` mean these conf
 
 Using the two names confirmed in Task 3:
 
-**Files:** all files containing placeholders, plus the `src/package_name/` directory (this Task is the one allowed exception to the 5-file rule — the rename must be atomic)
+**Files:** `src/package_name/` (directory rename), `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `STATE.md`, `src/<package_name>/__init__.py`, `src/<package_name>/cli.py`, `src/<package_name>/config.py`, `src/<package_name>/logging_config.py`
 
 **Steps:**
 
 1. Rename the directory `src/package_name/` to `src/<package_name>/` (the confirmed package name).
-2. In every file in the repository EXCEPT this one (`docs/001-SETUP_TRACK.md` keeps its generic wording), replace:
+2. In the following files, replace `<project_name>` and `project_name` → the project name, and `<package_name>` and `package_name` → the package name: `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `STATE.md`, and all .py files under `src/<package_name>/`.
 
-- `<project_name>` and `project_name` → the project name (hyphens allowed)
-- `<package_name>` and `package_name` → the package name (underscores)
+Do NOT rename placeholders in `docs/` rule files (`LOGGING_RULES.md`, `VERSIONING_RULES.md`, `REFERENCE.md`), `.env.example`, or the track template at `docs/000-TRACK_TEMPLATE.md` — those use <package_name> as a generic documentation convention.
 
 **Verify:** run
 
 ```bash
-grep -rn "package_name\|project_name" . \
-  --exclude-dir=.venv --exclude-dir=.git --exclude=001-SETUP_TRACK.md
+grep -rn "package_name\|project_name" \
+  src/ tests/ scripts/ pyproject.toml PLAN.md README.md STATE.md AGENTS.md
 ```
 
 Expected: 0 matches.
