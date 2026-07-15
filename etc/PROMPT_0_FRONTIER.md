@@ -69,7 +69,7 @@ Authoring rules — these exist because the executor is a small model:
 
   If the step creates a new file from scratch, use **Create** (the `write` tool), not **Edit**. If the step replaces an entire file, use **Write (overwrite)**, not **Edit**.
 - Every **Verify:** is an exact shell command plus the expected output. The executor runs it literally.
-- Each track must be self-contained: restate any fact the executor needs (file locations, function signatures from earlier tracks, env variables) instead of assuming it is remembered. The executor reads only `AGENTS.md`, `PLAN.md`, `STATE.md`, and the one active track file.
+- Each track must be self-contained: restate any fact the executor needs (file locations, function signatures from earlier tracks, env variables) instead of assuming it is remembered. When naming `PLAN.md` or `STATE.md`, say they are at the repository root — only tracks and rule files live in `docs/`. The executor reads only `AGENTS.md`, `PLAN.md`, `STATE.md`, and the one active track file.
 - Use the real confirmed project and package names everywhere — never literal `<package_name>`-style placeholders.
 - Keep **each track under 150 lines**; split into `NNN.1-`, `NNN.2-` subtracks if a phase needs more.
 - Order Tasks so every Task builds only on already-completed Tasks, and the first Task of each track builds only on the previous track's "Done when" state.
@@ -79,6 +79,6 @@ Authoring rules — these exist because the executor is a small model:
 - In `STATE.md`, list every track under "Track Chain" in execution order. Leave `CURRENT TRACK:` as `docs/001-SETUP_TRACK.md` and `NEXT TASK:` as Task 1 — do not start any Task.
 - In `PLAN.md`'s Backlog, mark each item whose track file now exists as `[~]` and reference its file.
 
-Do not modify `AGENTS.md`, `docs/001-SETUP_TRACK.md`, the rule files, or anything under `src/`. Do not execute any Task.
+Do not modify `AGENTS.md`, `docs/001-SETUP_TRACK.md`, the rule files, `scripts/finish_task.py`, or anything under `src/`. Do not execute any Task.
 
 Finally, report: the backlog phases you chose, the track files you created with a one-line summary each, and any open questions — then stop.

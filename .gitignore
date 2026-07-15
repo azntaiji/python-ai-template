@@ -25,6 +25,3 @@ build/
 
 # Internal dev and testing/example docs
 etc/REVIEW*
-00[2-9]*-*.md
-PLAN.md.example
-STATE.md.example

@@ -1,0 +1,241 @@
+# 004.2 - Webapp Routes Track
+
+Flask app factory, routes, CLI server, and app tests for the `zach_taiji_blog` package. Code lives in `src/zach_taiji_blog/`, tests in `tests/`. Always use the venv interpreter: `.venv/bin/python`, `.venv/bin/pytest`.
+
+Prerequisite state from track 004.1 (restated so nothing else must be read):
+
+- Flask 3.x is installed; `zach_taiji_blog.config` exposes `BLOGS_DIR` (default `"blogs"`) and `SITE_CONFIG_PATH` (default `"site.toml"`).
+- Templates `base.html`, `index.html`, `post.html`, `tag.html`, `404.html` exist in `src/zach_taiji_blog/templates/` and reference route names `index`, `post_page` (arg `slug`), `tag_page` (arg `tag`), plus context variables `site` and `nav_tags`.
+- `zach_taiji_blog.posts` provides `load_post(path: Path) -> Post`, `load_all_posts(blogs_dir: Path) -> list[Post]` (newest first), and `collect_tags(posts) -> list[str]`; `Post` has `slug`, `title`, `html`, `author`, `date`, `tags`.
+- `zach_taiji_blog.site_config` provides `load_site_config(path: Path) -> SiteConfig`.
+- `zach_taiji_blog.logging_config` provides `setup_logging()`.
+- `blogs/hello-world.md` exists; `site.toml` exists at the project root.
+
+## Read first (use the read tool)
+
+1. read `AGENTS.md`
+2. read `STATE.md`
+3. read the track file named on the `CURRENT TRACK:` line of `STATE.md`
+
+Do not read other track files.
+
+## Done when
+
+- [ ] `.venv/bin/zach_taiji_blog --help` prints usage with `--host`, `--port`, `--debug`
+- [ ] `.venv/bin/pytest -q` passes with at least 15 tests
+- [ ] All Tasks below are marked complete in `STATE.md`
+- [ ] `STATE.md` points to the next track in the Track Chain
+
+## Task 1 - Create the app factory and routes
+
+**Files:** `src/zach_taiji_blog/app.py`
+
+**Steps:**
+
+1. Create `src/zach_taiji_blog/app.py` with exactly:
+
+```python
+"""Flask application factory and routes for the blog."""
+
+import logging
+from pathlib import Path
+
+from flask import Flask, abort, render_template
+
+from zach_taiji_blog import config
+from zach_taiji_blog.posts import collect_tags, load_all_posts, load_post
+from zach_taiji_blog.site_config import load_site_config
+
+logger = logging.getLogger(__name__)
+
+
+def create_app(
+    blogs_dir: Path | None = None,
+    site_config_path: Path | None = None,
+) -> Flask:
+    """Create the blog's Flask application.
+
+    Args:
+        blogs_dir: Directory of markdown posts; defaults to
+            config.BLOGS_DIR ("blogs").
+        site_config_path: TOML site configuration file; defaults to
+            config.SITE_CONFIG_PATH ("site.toml").
+
+    Returns:
+        The configured Flask app.
+    """
+    app = Flask(__name__)
+    posts_root = Path(blogs_dir) if blogs_dir else Path(config.BLOGS_DIR)
+    cfg_path = (
+        Path(site_config_path)
+        if site_config_path
+        else Path(config.SITE_CONFIG_PATH)
+    )
+
+    @app.context_processor
+    def inject_site_context() -> dict:
+        """Make site config and nav tags available to every template."""
+        return {
+            "site": load_site_config(cfg_path),
+            "nav_tags": collect_tags(load_all_posts(posts_root)),
+        }
+
+    @app.route("/")
+    def index() -> str:
+        return render_template("index.html", posts=load_all_posts(posts_root))
+
+    @app.route("/post/<slug>")
+    def post_page(slug: str) -> str:
+        path = posts_root / f"{slug}.md"
+        if not path.is_file():
+            abort(404)
+        return render_template("post.html", post=load_post(path))
+
+    @app.route("/tag/<tag>")
+    def tag_page(tag: str) -> str:
+        posts = [p for p in load_all_posts(posts_root) if tag in p.tags]
+        return render_template("tag.html", tag=tag, posts=posts)
+
+    @app.errorhandler(404)
+    def not_found(err: object) -> tuple[str, int]:
+        return render_template("404.html"), 404
+
+    return app
+```
+
+**Verify:** run
+
+```bash
+.venv/bin/python -c "from zach_taiji_blog.app import create_app; c = create_app().test_client(); print(c.get('/').status_code, c.get('/post/hello-world').status_code, c.get('/post/nope').status_code)"
+```
+
+Expected: prints `200 200 404`.
+
+## Task 2 - Serve via the CLI and document it
+
+**Files:** `src/zach_taiji_blog/cli.py`, `README.md`
+
+**Steps:**
+
+1. Write `src/zach_taiji_blog/cli.py` (overwrite the entire file) with:
+
+```python
+"""Command-line interface for the zach_taiji_blog package."""
+
+import argparse
+
+from zach_taiji_blog.app import create_app
+from zach_taiji_blog.logging_config import setup_logging
+
+
+def main() -> None:
+    """Run the blog's local development server."""
+    setup_logging()
+    parser = argparse.ArgumentParser(
+        prog="zach_taiji_blog",
+        description="Serve the markdown blog locally.",
+    )
+    parser.add_argument("--host", default="127.0.0.1", help="Bind address")
+    parser.add_argument("--port", type=int, default=5000, help="Port (default 5000)")
+    parser.add_argument("--debug", action="store_true", help="Enable Flask debug mode")
+    args = parser.parse_args()
+    create_app().run(host=args.host, port=args.port, debug=args.debug)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+2. Write (overwrite) `README.md` with documentation covering: installing (`.venv/bin/python -m pip install -e ".[dev]"`), running (`.venv/bin/zach_taiji_blog` with `--host`, `--port`, `--debug` flags, serving `http://127.0.0.1:5000/`), adding posts (markdown files with YAML frontmatter keys `title`, `author`, `date`, `tags` in `blogs/`), and configuring `site.toml` (`[site] title`, `[[menu]]` label/url entries, `[footer] copyright`, `[[footer.social]]` name/url entries) plus the `BLOGS_DIR` and `SITE_CONFIG_PATH` env vars.
+
+**Verify:** run
+
+```bash
+.venv/bin/zach_taiji_blog --help
+```
+
+Expected: exits 0 and the output contains `--host`, `--port`, and `--debug`.
+
+## Task 3 - Add app tests
+
+**Files:** `tests/test_app.py`
+
+**Steps:**
+
+1. Create `tests/test_app.py` with exactly:
+
+```python
+"""Tests for zach_taiji_blog.app."""
+
+from pathlib import Path
+
+import pytest
+from flask.testing import FlaskClient
+
+from zach_taiji_blog.app import create_app
+
+POST = """---
+title: Test Post
+date: 2026-01-02
+tags:
+  - alpha
+---
+
+Hello ==bright== world.
+"""
+
+SITE = """[site]
+title = "Test Blog"
+
+[[menu]]
+label = "Elsewhere"
+url = "https://example.com"
+
+[footer]
+copyright = "© Test"
+"""
+
+
+@pytest.fixture()
+def client(tmp_path: Path) -> FlaskClient:
+    blogs = tmp_path / "blogs"
+    blogs.mkdir()
+    (blogs / "test-post.md").write_text(POST)
+    site = tmp_path / "site.toml"
+    site.write_text(SITE)
+    app = create_app(blogs_dir=blogs, site_config_path=site)
+    app.config["TESTING"] = True
+    return app.test_client()
+
+
+def test_index_lists_posts(client: FlaskClient) -> None:
+    body = client.get("/").text
+    assert "Test Blog" in body
+    assert "Test Post" in body
+    assert "Elsewhere" in body
+
+
+def test_post_page_renders_markdown(client: FlaskClient) -> None:
+    body = client.get("/post/test-post").text
+    assert "<mark>bright</mark>" in body
+    assert "© Test" in body
+
+
+def test_unknown_slug_404(client: FlaskClient) -> None:
+    resp = client.get("/post/does-not-exist")
+    assert resp.status_code == 404
+    assert "404" in resp.text
+
+
+def test_tag_page_filters(client: FlaskClient) -> None:
+    assert "Test Post" in client.get("/tag/alpha").text
+    assert "Test Post" not in client.get("/tag/beta").text
+```
+
+**Verify:** run
+
+```bash
+.venv/bin/pytest -q
+```
+
+Expected: output ends with `15 passed`.

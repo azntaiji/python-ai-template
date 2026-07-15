@@ -1,0 +1,76 @@
+# 002.3 - Sample Posts Track
+
+Sample posts in `blogs/` at the project root. Tests live in `tests/`. Always use the venv interpreter: `.venv/bin/python`.
+
+Prerequisite state from track 002.2 (restated so nothing else must be read):
+
+- Post loader exists at `src/zach_taiji_blog/posts.py`, tests and fixture files exist at `tests/test_posts.py` and `fixtures/sample_post.md`.
+- `.venv/bin/pytest -q` passes with at least 8 tests.
+
+## Read first (use the read tool)
+
+1. read `AGENTS.md`
+2. read `STATE.md`
+3. read the track file named on the `CURRENT TRACK:` line of `STATE.md`
+
+Do not read other track files.
+
+## Done when
+
+- [ ] `blogs/` contains two sample posts that load without errors
+- [ ] All Tasks below are marked complete in `STATE.md`
+- [ ] `STATE.md` points to the next track in the Track Chain
+
+## Task 1 - Add sample blog posts
+
+**Files:** `blogs/hello-world.md`, `blogs/markdown-features.md`
+
+**Steps:**
+
+1. If the `blogs/` directory does not exist at the project root, create it.
+2. Create `blogs/hello-world.md` with exactly:
+
+```markdown
+---
+title: Hello, World
+author: Zach Taiji
+date: 2026-07-10
+tags:
+  - meta
+---
+
+Welcome to the blog. Posts are plain markdown files in the `blogs/` directory, with Obsidian-style YAML frontmatter on top.
+```
+
+3. Create `blogs/markdown-features.md` with exactly the content below (the outer fence uses four backticks only so this document nests correctly — the file itself starts at `---` and keeps the inner three-backtick fence):
+
+````markdown
+---
+title: Markdown Feature Tour
+author: Zach Taiji
+date: 2026-07-11
+tags:
+  - meta
+  - markdown
+---
+
+This blog supports ==highlighting==, footnotes[^1], H~2~O subscripts, x^2^ superscripts, tables, and fenced code:
+
+| Feature   | Syntax     |
+|-----------|------------|
+| Highlight | `==text==` |
+
+```python
+print("hello")
+```
+
+[^1]: Like this one.
+````
+
+**Verify:** run
+
+```bash
+.venv/bin/python -c "from pathlib import Path; from zach_taiji_blog.posts import load_all_posts, collect_tags; ps = load_all_posts(Path('blogs')); print(len(ps), collect_tags(ps))"
+```
+
+Expected: prints `2 ['markdown', 'meta']`.
