@@ -7,7 +7,7 @@
 
 1. read `AGENTS.md`
 2. read `STATE.md`
-3. read the track file named under "Current Track" in `STATE.md`
+3. read the track file named on the `CURRENT TRACK:` line of `STATE.md`
 
 Do not read other track files.
 
@@ -22,6 +22,29 @@ Do not read other track files.
 **Files:** <the files this Task changes — 5 at most>
 
 **Steps:**
+
+<!-- Use exactly one of these verbs per step so the agent knows which tool to call:
+
+  Create `path` with:         → write tool (new file, full contents follow)
+  Write (overwrite) `path`:   → write tool (replace entire existing file)
+  Edit `path`:                → edit tool (partial change; provide old/new blocks)
+  Run:                        → bash tool (fenced ```bash``` block follows)
+  Rename `old` → `new`        → bash tool (mv command)
+
+  For Edit steps, always provide anchored old/new blocks:
+
+    Edit `pyproject.toml`:
+
+    old:
+    ```
+    exact text to find
+    ```
+
+    new:
+    ```
+    replacement text
+    ```
+-->
 
 1. <one command or one edit per step>
 2. <...>

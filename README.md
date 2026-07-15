@@ -39,8 +39,8 @@ Code reads configuration through `src/<package_name>/config.py` — see the `get
 .venv/bin/<package_name>
 ```
 
-<!-- Document CLI arguments and flags here as they are added. The post-task
-     checklist in STATE.md requires keeping this section current. -->
+<!-- Document CLI arguments and flags here as they are added. The "How to
+     finish a Task" section in AGENTS.md requires keeping this section current. -->
 
 ## Development
 

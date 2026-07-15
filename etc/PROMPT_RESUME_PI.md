@@ -1,6 +1,6 @@
 # Pi-specific Resume Prompt (every session after kickoff)
 
-Paste everything below the line as the prompt, unchanged, at the start of each working session. `STATE.md` tells the agent where to pick up; nothing project-specific goes in this prompt.
+Use this prompt when you are using the Pi coding agent harness specifically. Paste everything below the line as the prompt, unchanged, at the start of each working session. `STATE.md` tells the agent where to pick up; nothing project-specific goes in this prompt.
 
 ---
 
@@ -8,17 +8,16 @@ You have four tools: read, write, edit, bash. Every action you take MUST use one
 
 Read `AGENTS.md` and `STATE.md`. Do not read `PLAN.md` or any other track file — everything you need for the Task is in the one track file named below.
 
-Open the track file named under "Current Track" in `STATE.md`. Execute the one Task named under "Next Task", exactly as written in that track file. Do exactly ONE Task only — do not begin the next Task even if you have context left.
+Open the track file named on the `CURRENT TRACK:` line of `STATE.md`. Execute the one Task named on the `NEXT TASK:` line, exactly as written in that track file. Do exactly ONE Task only — do not begin the next Task even if you have context left.
 
-When the Task's work is done, do the **"HOW TO FINISH A TASK"** block at the top of `STATE.md`, in order — run Verify, move the finished Task, advance "Next Task", bump the version / update `README.md` / commit if required.
+When the Task's work is done, follow the **"How to finish a Task"** section of `AGENTS.md`, in order — run Verify, rewrite `STATE.md` in one call to the write tool, then bump the version / update `README.md` / commit if required.
 
-Then, before you stop, output this checklist verbatim with every box filled:
+Then, before you stop, print this report with each `<...>` filled in:
 
-- [ ] Verify command was run; result recorded in STATE.md "Task Status"
-- [ ] Finished task moved to top of "Completed Tasks"
-- [ ] "Next Task" advanced (or track rolled to next in chain)
-- [ ] Version bumped if src/ or tests/ changed (else: N/A)
-- [ ] README updated if run/config/install changed (else: N/A)
-- [ ] Committed with a message naming the task (or: no .git yet)
+- Verify: <pass | fail>
+- STATE.md rewritten: <yes>
+- Version: <new number | no bump needed>
+- README: <updated | no change needed>
+- Commit: <message | no .git yet>
 
-If any box is unchecked, you are not done — go back and finish it. Then report files changed, Verify result, and open issues, and stop. Do NOT begin the next Task. A fresh session will pick it up.
+Then report files changed and open issues, and stop. Do NOT begin the next Task. A fresh session will pick it up.

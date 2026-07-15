@@ -47,6 +47,27 @@ Authoring rules — these exist because the executor is a small model:
 
 - Follow the template structure exactly: Read first / Done when / Tasks, each Task with **Files:**, **Steps:**, **Verify:**.
 - Each Task changes at most 5 files. Each Step is one command or one edit, imperative, with exact paths — no "as appropriate", no "etc."
+- **Step verbs must map to tool calls.** The executor has four tools: `read`, `write`, `edit`, `bash`. Use exactly one of these verbs per step:
+  - **Create** `path` with: → `write` tool (new file, full contents follow)
+  - **Write (overwrite)** `path`: → `write` tool (replace entire existing file)
+  - **Edit** `path`: → `edit` tool (partial change; provide old/new blocks — see below)
+  - **Run:** → `bash` tool (fenced ```bash``` block follows)
+  - **Rename** `old` → `new` → `bash` tool (mv command)
+- **Edit steps must provide anchored old/new blocks.** The `edit` tool works by exact string matching. Never say "replace the X section with" or "add Y at the end" — always provide the literal old text and the literal new text. Format:
+
+      Edit `path`:
+
+      old:
+      ```
+      exact current text to find
+      ```
+
+      new:
+      ```
+      replacement text
+      ```
+
+  If the step creates a new file from scratch, use **Create** (the `write` tool), not **Edit**. If the step replaces an entire file, use **Write (overwrite)**, not **Edit**.
 - Every **Verify:** is an exact shell command plus the expected output. The executor runs it literally.
 - Each track must be self-contained: restate any fact the executor needs (file locations, function signatures from earlier tracks, env variables) instead of assuming it is remembered. The executor reads only `AGENTS.md`, `PLAN.md`, `STATE.md`, and the one active track file.
 - Use the real confirmed project and package names everywhere — never literal `<package_name>`-style placeholders.
@@ -55,7 +76,7 @@ Authoring rules — these exist because the executor is a small model:
 
 ## Job 3 — Update STATE.md and the Backlog
 
-- In `STATE.md`, list every track in "Track Chain" in execution order. Leave "Current Track" as `docs/001-SETUP_TRACK.md` and "Next Task" as Task 1 — do not start any Task.
+- In `STATE.md`, list every track under "Track Chain" in execution order. Leave `CURRENT TRACK:` as `docs/001-SETUP_TRACK.md` and `NEXT TASK:` as Task 1 — do not start any Task.
 - In `PLAN.md`'s Backlog, mark each item whose track file now exists as `[~]` and reference its file.
 
 Do not modify `AGENTS.md`, `docs/001-SETUP_TRACK.md`, the rule files, or anything under `src/`. Do not execute any Task.

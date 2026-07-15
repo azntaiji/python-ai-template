@@ -12,7 +12,7 @@
 ├── PLAN.md             **North star** — goal, scope, architecture, backlog, done criteria
 ├── pyproject.toml
 ├── README.md
-├── STATE.md            Current track, next task, post-task checklist
+├── STATE.md            Current track, next task, completed tasks
 ├── data/               Data and input files
 ├── docs/               **Implementation tracks** and rule files
 │   ├── 000-TRACK_TEMPLATE.md   Template for new track files
@@ -48,4 +48,4 @@ Tracks are named `docs/NNN-NAME_TRACK.md` with zero-padded, three-digit indices 
 
 - **`PLAN.md` (root)** — North star. Goal, scope, architecture decisions, backlog, and done criteria for the entire project. Read this to understand *what* we're building.
 - **`docs/NNN-*_TRACK.md`** — Implementation tracks. Ordered Tasks with acceptance criteria for a specific phase. Read the active one to understand *how* to build the next piece.
-- **`STATE.md`** — Pointer. Which track is active, what's the next task, what's done. Read this to know *where* to work next.
+- **`STATE.md`** — Pointer. Which track is active, what's the next task, what's done. Read this to know *where* to work next. How to update it lives in `AGENTS.md`, section "How to finish a Task".

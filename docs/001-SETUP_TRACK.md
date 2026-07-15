@@ -4,7 +4,7 @@
 
 1. read `AGENTS.md`
 2. read `STATE.md`
-3. read the track file named under "Current Track" in `STATE.md`
+3. read the track file named on the `CURRENT TRACK:` line of `STATE.md`
 
 Do not read other track files.
 
@@ -84,7 +84,7 @@ Expected: Prints Python 3.11 or newer.
 
 If the user has already stated one or both in the conversation, confirm rather than re-ask. If they provide only one name, propose the other by normalizing it (hyphens ↔ underscores) and confirm. If no user is available to answer, use the repository directory name as the project name and derive the package name from it by replacing hyphens with underscores.
 
-2. Record both names now, on one line under "Completed Tasks" in `STATE.md` (e.g., `Task 3 — names settled: project=data-pipeline, package=data_pipeline`). Do this before running Verify. Do not proceed to Task 4 until both names are settled.
+2. Record both names now, on one line under "Completed Tasks" in `STATE.md`, replacing `(none)` if it is the only entry (e.g., `Task 3 — names settled: project=data-pipeline, package=data_pipeline`). Do this before running Verify. Do not proceed to Task 4 until both names are settled.
 
 Everywhere in the project, `<project_name>` and `<package_name>` mean these confirmed values — never leave literal placeholders in generated files.
 
@@ -98,8 +98,8 @@ Using the two names confirmed in Task 3:
 
 **Steps:**
 
-1. Rename the directory `src/package_name/` to `src/<package_name>/` (the confirmed package name).
-2. In the following files, replace `<project_name>` and `project_name` → the project name, and `<package_name>` and `package_name` → the package name: `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `STATE.md`, and all .py files under `src/<package_name>/`.
+1. Rename the directory: run `mv src/package_name/ src/<package_name>/` (the confirmed package name).
+2. In each of the following files, edit to replace every occurrence of `project_name` → the confirmed project name, and every occurrence of `package_name` → the confirmed package name: `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `STATE.md`, and all `.py` files under `src/<package_name>/`. Use the edit tool with replace-all for each file.
 
 Do NOT rename placeholders in `docs/` rule files (`LOGGING_RULES.md`, `VERSIONING_RULES.md`, `REFERENCE.md`), `.env.example`, or the track template at `docs/000-TRACK_TEMPLATE.md` — those use <package_name> as a generic documentation convention.
 

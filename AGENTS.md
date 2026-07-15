@@ -5,8 +5,8 @@
 ## Working Session (read in this order, nothing else)
 
 1. `AGENTS.md` — this file: rules and repository map
-2. `STATE.md` — current track, next task, post-task checklist
-3. The active track file named in `STATE.md` under "Current Track"
+2. `STATE.md` — current track, next task, completed tasks
+3. The active track file named on the `CURRENT TRACK:` line of `STATE.md`
 
 Do not load other track files. Load the rule files in `docs/` only when their topic comes up (see Conventions below).
 
@@ -58,6 +58,50 @@ These apply to all work in this repository, at all times:
 - Ask before destructive actions, broad refactors, adding dependencies, or changing public contracts. Shell commands listed in the active track file are pre-authorized.
 - After each Task, report: files changed, tests added/updated, Verify result, open issues.
 
-## Post-Task Completion
+## How to finish a Task
 
-After implementing a Task, follow the "HOW TO FINISH A TASK" block at the top of `STATE.md`. This ensures a fresh session can resume from the correct task.
+When you begin a Task, first edit `STATE.md` to set `STARTED: yes`.
+
+When the Task's work is done, do these steps in order:
+
+1. Run the Task's **Verify** command from the track file.
+2. **If Verify failed**: edit `STATE.md` — set `VERIFY: fail` and add one line
+   under "Blockers" describing the failure. Do not touch "Completed Tasks".
+   Follow `docs/ERROR_RECOVERY.md`. Stop here.
+3. **If Verify passed**: rewrite `STATE.md` in ONE call to the write tool.
+   Copy the current file, then apply exactly these changes:
+   - `NEXT TASK:` → the next Task title in the current track file.
+     If the track has no more Tasks, also set `CURRENT TRACK:` to the next
+     file in "Track Chain", and `NEXT TASK:` to that track's Task 1 title.
+   - `STARTED: no` and `VERIFY: not-run` (ready for the next session).
+   - Add the finished Task as the FIRST line under "Completed Tasks",
+     as `Task N - title — one-line result`. If the section says `(none)`,
+     replace that with the new line.
+   - Change nothing else. Keep "Blockers" and "Track Chain" as they were.
+
+   Worked example — finishing Task 1 of a 2-task track:
+
+   ```
+   BEFORE                                AFTER
+   CURRENT TRACK: docs/001-X_TRACK.md    CURRENT TRACK: docs/001-X_TRACK.md
+   NEXT TASK: Task 1 - Git init          NEXT TASK: Task 2 - Init venv
+   STARTED: yes                          STARTED: no
+   VERIFY: not-run                       VERIFY: not-run
+   ## Completed Tasks                    ## Completed Tasks
+   (none)                                Task 1 - Git init — repo initialized
+   ```
+
+4. If the Task changed files under `src/` or `tests/`: bump `version` in
+   `pyproject.toml` AND `__version__` in `src/<package_name>/__init__.py`
+   per `docs/VERSIONING_RULES.md` (the two must be identical). Otherwise skip.
+5. If installation, configuration, or run commands changed: update `README.md`.
+   Otherwise skip.
+6. If a `.git` directory exists: commit all changes with a message naming the
+   Task. Otherwise skip (the setup track creates it).
+7. Print this report with each `<...>` filled in, then stop:
+
+   - Verify: <pass | fail>
+   - STATE.md rewritten: <yes>
+   - Version: <new number | no bump needed>
+   - README: <updated | no change needed>
+   - Commit: <message | no .git yet>
