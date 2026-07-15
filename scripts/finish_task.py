@@ -6,9 +6,10 @@ Run exactly one of:
     python3 scripts/finish_task.py --result "<one-line result>"   # Verify passed
     python3 scripts/finish_task.py --fail "<one-line reason>"     # Verify failed
 
---result records the current NEXT TASK as completed, advances NEXT TASK to the
-following Task in the current track (rolling to the next file in "Track Chain"
-when the track is finished), and resets VERIFY to not-run.
+--result records the current NEXT TASK as completed (prefixed with its track,
+e.g. "[004.2-WEBAPP_ROUTES_TRACK] Task 3 - ... — <result>"), advances NEXT
+TASK to the following Task in the current track (rolling to the next file in
+"Track Chain" when the track is finished), and resets VERIFY to not-run.
 
 --fail sets VERIFY to fail and records the reason under "Blockers". NEXT TASK
 is left unchanged so the next session retries the same Task.
@@ -260,20 +261,27 @@ def main(argv: list[str] | None = None) -> int:
         next_task = read_key(text, "NEXT TASK")
         completed = read_section(text, "Completed Tasks")
         blockers = read_section(text, "Blockers")
-        chain_lines = read_section(text, "Track Chain")
+        # Keep only numbered entries: the chain is the one section where a
+        # stray line would otherwise be preserved forever on every rewrite.
+        chain_lines = [
+            line
+            for line in read_section(text, "Track Chain")
+            if re.match(r"\d+\.\s", line)
+        ]
         chain = [
             m.group(1)
             for line in chain_lines
             if (m := re.match(r"\d+\.\s*(\S+)", line))
         ]
 
+        track_label = Path(current_track).stem
         if args.fail is not None:
             verify = "fail"
-            blockers.append(f"{next_task}: {args.fail}")
+            blockers.append(f"[{track_label}] {next_task}: {args.fail}")
             new_track, new_task = current_track, next_task
         else:
             verify = "not-run"
-            completed.insert(0, f"{next_task} — {args.result}")
+            completed.insert(0, f"[{track_label}] {next_task} — {args.result}")
             new_track, new_task = advance(current_track, next_task, chain)
 
         STATE_PATH.write_text(
@@ -288,7 +296,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    commit_message = next_task if args.fail is None else f"{next_task} — Verify failed"
+    commit_message = f"[{track_label}] {next_task}"
+    if args.fail is not None:
+        commit_message += " — Verify failed"
     commit_note = git_commit(commit_message)
 
     print("STATE.md updated.")
