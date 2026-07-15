@@ -31,6 +31,8 @@ git add -A
 git commit -m "Initial commit"
 ```
 
+If `git commit` reports "nothing to commit", the initial commit already exists from an interrupted session — this is not an error; go to Verify.
+
 **Verify:** run
 
 ```bash
@@ -73,33 +75,41 @@ Expected: Prints Python 3.11 or newer.
 
 ## Task 3 - Project and Package Naming
 
-**Files:** `STATE.md`
+**Files:** `PLAN.md`
 
 **Steps:**
 
-1. If the Architecture section of `PLAN.md` contains a `Names:` line, use those two names and skip to step 2. Otherwise ask the user for:
+1. If the Architecture section of `PLAN.md` (at the repository root, NOT `docs/PLAN.md`) contains a `Names:` line, use those two names and skip to step 2. Otherwise ask the user for:
 
 - **Project name** — the distribution name used in `pyproject.toml` and typically the repository/directory name. May contain hyphens (e.g., `data-pipeline`).
 - **Package name** — the importable package directory under `src/`. Must be a valid Python identifier: lowercase, underscores instead of hyphens, no leading digits (e.g., `data_pipeline`).
 
 If the user has already stated one or both in the conversation, confirm rather than re-ask. If they provide only one name, propose the other by normalizing it (hyphens ↔ underscores) and confirm. If no user is available to answer, use the repository directory name as the project name and derive the package name from it by replacing hyphens with underscores.
 
-2. Record both names now, on one line under "Completed Tasks" in `STATE.md`, replacing `(none)` if it is the only entry (e.g., `Task 3 — names settled: project=data-pipeline, package=data_pipeline`). Do this before running Verify. Do not proceed to Task 4 until both names are settled.
+2. If the Architecture section of `PLAN.md` does not already contain the `Names:` line, add it now with the edit tool, on its own bullet (e.g., `- Names: project=data-pipeline, package=data_pipeline (decided 2026-07-15)`). Do not proceed to Task 4 until both names are settled.
 
 Everywhere in the project, `<project_name>` and `<package_name>` mean these confirmed values — never leave literal placeholders in generated files.
 
-**Verify:** Both names are recorded in `STATE.md`, and the package name is a valid Python identifier.
+**Verify:** run
+
+```bash
+grep -n "Names:" PLAN.md
+```
+
+Expected: Prints one line containing both names, and the package name is a valid Python identifier (lowercase, underscores, no leading digits).
+
+When finishing this Task, use the result line `names settled: project=<project name>, package=<package name>` so the names are also recorded in `STATE.md`.
 
 ## Task 4 - Rename placeholders
 
 Using the two names confirmed in Task 3:
 
-**Files:** `src/package_name/` (directory rename), `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `STATE.md`, `src/<package_name>/__init__.py`, `src/<package_name>/cli.py`, `src/<package_name>/config.py`, `src/<package_name>/logging_config.py`
+**Files:** `src/package_name/` (directory rename), `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `src/<package_name>/__init__.py`, `src/<package_name>/cli.py`, `src/<package_name>/config.py`, `src/<package_name>/logging_config.py`
 
 **Steps:**
 
 1. Rename the directory: run `mv src/package_name/ src/<package_name>/` (the confirmed package name).
-2. In each of the following files, edit to replace every occurrence of `project_name` → the confirmed project name, and every occurrence of `package_name` → the confirmed package name: `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, `STATE.md`, and all `.py` files under `src/<package_name>/`. Use the edit tool with replace-all for each file.
+2. In each of the following files, edit to replace every occurrence of `project_name` → the confirmed project name, and every occurrence of `package_name` → the confirmed package name: `pyproject.toml`, `README.md`, `AGENTS.md`, `PLAN.md`, and all `.py` files under `src/<package_name>/`. Use the edit tool with replace-all for each file. Do not touch `STATE.md` or `scripts/finish_task.py` — they contain no placeholders.
 
 Do NOT rename placeholders in `docs/` rule files (`LOGGING_RULES.md`, `VERSIONING_RULES.md`, `REFERENCE.md`), `.env.example`, or the track template at `docs/000-TRACK_TEMPLATE.md` — those use <package_name> as a generic documentation convention.
 

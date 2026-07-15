@@ -29,6 +29,7 @@
 ├── out/
 │   └── logs/           Rotating log files (created at runtime; not committed)
 ├── scripts/            Thin wrappers calling specific modules (IDE run configurations)
+│   └── finish_task.py  Sole writer of STATE.md; run after every Task (see AGENTS.md)
 ├── src/
 │   └── <package_name>/
 │       ├── __init__.py

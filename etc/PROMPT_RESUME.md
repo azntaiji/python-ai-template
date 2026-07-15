@@ -4,18 +4,18 @@ Coding agent harness-agnostic prompt. Paste everything below the line as the pro
 
 ---
 
-Read `AGENTS.md` and `STATE.md`. Do not read `PLAN.md` or any other track file — everything you need for the Task is in the one track file named below.
+Read `AGENTS.md` and `STATE.md`. Do not read `PLAN.md` (a separate planning file at the repository root) and do not read any track file except the one named below — everything you need for the Task is in that one file.
 
-Open the track file named on the `CURRENT TRACK:` line of `STATE.md`. Execute the one Task named on the `NEXT TASK:` line, exactly as written in that track file. Do exactly ONE Task only — do not begin the next Task even if you have context left.
+Open the track file named on the `CURRENT TRACK:` line of `STATE.md`. Then:
 
-When the Task's work is done, follow the **"How to finish a Task"** section of `AGENTS.md`, in order — run Verify, rewrite `STATE.md` in one call to the write tool, then bump the version / update `README.md` / commit if required.
-
-Then, before you stop, print this report with each `<...>` filled in:
+1. Execute the one Task named on the `NEXT TASK:` line, exactly as written in that track file. Do exactly ONE Task only — do not begin the next Task even if you have context left.
+2. When the Task's work is done, follow the **"How to finish a Task"** section of `AGENTS.md`, in order — run Verify, run `python3 scripts/finish_task.py` (it updates `STATE.md`; never edit that file yourself), then bump the version / update `README.md` / commit if required.
+3. Before you stop, print exactly these five lines with each `<...>` filled in — no extra text before or after:
 
 - Verify: <pass | fail>
-- STATE.md rewritten: <yes>
+- STATE.md updated: <yes>
 - Version: <new number | no bump needed>
 - README: <updated | no change needed>
 - Commit: <message | no .git yet>
 
-Then report files changed and open issues, and stop. Do NOT begin the next Task. A fresh session will pick it up.
+Then stop. Do NOT begin the next Task. A fresh session will pick it up.

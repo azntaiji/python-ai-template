@@ -12,7 +12,7 @@ Do not load other track files. Load the rule files in `docs/` only when their to
 
 Repository map, document roles, and track mechanics live in `docs/REFERENCE.md`. You do not need it for normal Task execution — the active track file names every path you need. Open it only if you're lost about where something lives.
 
-Skim `PLAN.md` only when designing new components or making architecture decisions.
+Skim `PLAN.md` (at the repository root, next to this file — not in `docs/`) only when designing new components or making architecture decisions.
 
 ## Tools
 
@@ -49,47 +49,42 @@ These apply to all work in this repository, at all times:
 ## Operating Rules
 
 - Work on one bounded Task at a time. Change only the files the Task names.
+- Never reason from memory about what a file contains — read it again with the read tool. Do not run commands or open files that no step asks for.
+- Repository history from earlier sessions is normal. Do not investigate commits, branches, or remotes beyond what a step explicitly asks.
+- Do each step once. If the outcome is correct but the wording could be better, do NOT redo it — imperfect phrasing is acceptable; move on.
+- Read an instruction file at most once per session. After that, act on it instead of re-checking it.
 - Do not redesign the system unless the Task requires it.
 - For each Task: restate it, name the files to change, name the Verify step, make the smallest change that passes, stop.
 - Keep source files under 400 lines. If a file grows beyond that, split it.
 - Use explicit types where possible.
 - For Tasks that change package code, write or update tests before implementation. Setup, configuration, and documentation Tasks need no tests.
-- Durable context lives in repository files, not chat history. When implementation diverges from the docs, update the docs immediately. Record material architecture decisions in the "Architecture" section of `PLAN.md` before moving on, and read that section before designing new components.
+- Durable context lives in repository files, not chat history. When implementation diverges from the docs, update the docs immediately. Record material architecture decisions in the "Architecture" section of `PLAN.md` (repository root) before moving on, and read that section before designing new components.
 - Ask before destructive actions, broad refactors, adding dependencies, or changing public contracts. Shell commands listed in the active track file are pre-authorized.
 - After each Task, report: files changed, tests added/updated, Verify result, open issues.
 
 ## How to finish a Task
 
-When you begin a Task, first edit `STATE.md` to set `STARTED: yes`.
-
 When the Task's work is done, do these steps in order:
 
 1. Run the Task's **Verify** command from the track file.
-2. **If Verify failed**: edit `STATE.md` — set `VERIFY: fail` and add one line
-   under "Blockers" describing the failure. Do not touch "Completed Tasks".
-   Follow `docs/ERROR_RECOVERY.md`. Stop here.
-3. **If Verify passed**: rewrite `STATE.md` in ONE call to the write tool.
-   Copy the current file, then apply exactly these changes:
-   - `NEXT TASK:` → the next Task title in the current track file.
-     If the track has no more Tasks, also set `CURRENT TRACK:` to the next
-     file in "Track Chain", and `NEXT TASK:` to that track's Task 1 title.
-   - `STARTED: no` and `VERIFY: not-run` (ready for the next session).
-   - Add the finished Task as the FIRST line under "Completed Tasks",
-     as `Task N - title — one-line result`. If the section says `(none)`,
-     replace that with the new line.
-   - Change nothing else. Keep "Blockers" and "Track Chain" as they were.
+2. **If Verify failed**, run:
 
-   Worked example — finishing Task 1 of a 2-task track:
+   ```bash
+   python3 scripts/finish_task.py --fail "<one line describing the failure>"
+   ```
 
+   Then follow `docs/ERROR_RECOVERY.md`. Stop here.
+3. **If Verify passed**, run:
+
+   ```bash
+   python3 scripts/finish_task.py --result "<one line describing what the Task produced>"
    ```
-   BEFORE                                AFTER
-   CURRENT TRACK: docs/001-X_TRACK.md    CURRENT TRACK: docs/001-X_TRACK.md
-   NEXT TASK: Task 1 - Git init          NEXT TASK: Task 2 - Init venv
-   STARTED: yes                          STARTED: no
-   VERIFY: not-run                       VERIFY: not-run
-   ## Completed Tasks                    ## Completed Tasks
-   (none)                                Task 1 - Git init — repo initialized
-   ```
+
+   The script updates `STATE.md` for you: it records the finished Task,
+   advances `NEXT TASK:`, and rolls to the next track in "Track Chain" when
+   the current one is done. Never edit `STATE.md` yourself and never modify
+   `scripts/finish_task.py`. If the script prints an error, follow
+   `docs/ERROR_RECOVERY.md` and stop.
 
 4. If the Task changed files under `src/` or `tests/`: bump `version` in
    `pyproject.toml` AND `__version__` in `src/<package_name>/__init__.py`
@@ -98,10 +93,10 @@ When the Task's work is done, do these steps in order:
    Otherwise skip.
 6. If a `.git` directory exists: commit all changes with a message naming the
    Task. Otherwise skip (the setup track creates it).
-7. Print this report with each `<...>` filled in, then stop:
+7. Print exactly these five lines with each `<...>` filled in — no extra text before or after — then stop:
 
    - Verify: <pass | fail>
-   - STATE.md rewritten: <yes>
+   - STATE.md updated: <yes>
    - Version: <new number | no bump needed>
    - README: <updated | no change needed>
    - Commit: <message | no .git yet>
