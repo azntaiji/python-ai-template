@@ -14,6 +14,19 @@ Repository map, document roles, and track mechanics live in `docs/REFERENCE.md`.
 
 Skim `PLAN.md` only when designing new components or making architecture decisions.
 
+## Tools
+
+You have four tools. Map every instruction to one of these:
+
+| Verb in tracks       | Tool   |
+|----------------------|--------|
+| "Read …"             | read   |
+| "Create file … with" | write  |
+| "In file …, replace" | edit   |
+| fenced ```bash```    | bash   |
+
+If a step doesn't map to one of these, stop and report a Blocker.
+
 ## Conventions
 
 These apply to all work in this repository, at all times:

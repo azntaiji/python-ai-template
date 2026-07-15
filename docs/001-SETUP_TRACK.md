@@ -1,8 +1,12 @@
 # 001 - Setup Track
 
-## Read first
+## Read first (use the read tool)
 
-`AGENTS.md`, `STATE.md`. Do not read other track files.
+1. read `AGENTS.md`
+2. read `STATE.md`
+3. read the track file named under "Current Track" in `STATE.md`
+
+Do not read other track files.
 
 ## Done when
 

@@ -1,0 +1,4 @@
+{
+  "defaultThinkingLevel": "low",
+  "tools": ["read", "write", "edit", "bash"]
+}
