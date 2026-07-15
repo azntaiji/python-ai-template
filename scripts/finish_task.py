@@ -13,8 +13,13 @@ when the track is finished), and resets VERIFY to not-run.
 --fail sets VERIFY to fail and records the reason under "Blockers". NEXT TASK
 is left unchanged so the next session retries the same Task.
 
+After updating STATE.md, the script also commits all changes with a message
+naming the Task — when a .git directory exists (during initial setup it may
+not yet; that is fine).
+
 Do not modify this script. Do not edit STATE.md by hand (one exception:
-deleting a resolved Blocker line, per docs/ERROR_RECOVERY.md).
+deleting a resolved Blocker line, per docs/ERROR_RECOVERY.md). Do not run
+git commit yourself when finishing a Task — this script does it.
 
 Uses only the Python standard library; runs on the system python3 (no venv
 required).
@@ -24,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -192,6 +198,38 @@ def render(
     )
 
 
+def git_commit(message: str) -> str:
+    """Commit all changes with the given message, if a .git directory exists.
+
+    Args:
+        message: The commit message (the finished Task's title).
+
+    Returns:
+        A one-line description of the outcome, for the printed summary.
+        Never raises: git problems are reported in the returned line so a
+        failed commit does not undo the STATE.md update.
+    """
+    if not (ROOT / ".git").is_dir():
+        return "no .git yet — commit skipped (the setup track creates it)"
+
+    def run(*args: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", "-C", str(ROOT), *args], capture_output=True, text=True
+        )
+
+    add = run("add", "-A")
+    if add.returncode != 0:
+        return f"WARNING: git add failed: {add.stderr.strip()}"
+    commit = run("commit", "-m", message)
+    if commit.returncode != 0:
+        output = (commit.stdout + commit.stderr).strip()
+        if "nothing to commit" in output:
+            return "nothing new to commit"
+        return f"WARNING: git commit failed: {output}"
+    rev = run("rev-parse", "--short", "HEAD")
+    return f'{rev.stdout.strip()} "{message}"'
+
+
 def main(argv: list[str] | None = None) -> int:
     """Parse arguments, update STATE.md, and print the outcome.
 
@@ -250,6 +288,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
+    commit_message = next_task if args.fail is None else f"{next_task} — Verify failed"
+    commit_note = git_commit(commit_message)
+
     print("STATE.md updated.")
     print(f"  CURRENT TRACK: {new_track}")
     print(f"  NEXT TASK: {new_task}")
@@ -258,9 +299,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  Blocker recorded: {blockers[-1]}")
     else:
         print(f"  Completed: {completed[0]}")
+    print(f"  Commit: {commit_note}")
     if new_task == ALL_DONE:
         print("All tracks in the Track Chain are complete.")
-    print('Continue with the remaining steps in AGENTS.md "How to finish a Task".')
+    print("Now print the report lines (AGENTS.md \"How to finish a Task\"), then STOP.")
+    print("Do NOT begin the next Task shown above — a fresh session picks it up.")
     return 0
 
 

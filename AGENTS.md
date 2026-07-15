@@ -74,29 +74,29 @@ When the Task's work is done, do these steps in order:
    ```
 
    Then follow `docs/ERROR_RECOVERY.md`. Stop here.
-3. **If Verify passed**, run:
+3. **If Verify passed** and the Task changed files under `src/` or `tests/`:
+   bump `version` in `pyproject.toml` AND `__version__` in
+   `src/<package_name>/__init__.py` per `docs/VERSIONING_RULES.md` (the two
+   must be identical). Otherwise skip.
+4. If installation, configuration, or run commands changed: update `README.md`.
+   Otherwise skip.
+5. Run:
 
    ```bash
    python3 scripts/finish_task.py --result "<one line describing what the Task produced>"
    ```
 
-   The script updates `STATE.md` for you: it records the finished Task,
-   advances `NEXT TASK:`, and rolls to the next track in "Track Chain" when
-   the current one is done. Never edit `STATE.md` yourself and never modify
-   `scripts/finish_task.py`. If the script prints an error, follow
-   `docs/ERROR_RECOVERY.md` and stop.
+   The script updates `STATE.md` for you (records the finished Task,
+   advances `NEXT TASK:`, rolls to the next track in "Track Chain" when the
+   current one is done) AND makes the git commit for the Task. Never edit
+   `STATE.md`, run `git commit`, or modify `scripts/finish_task.py`
+   yourself. If the script prints an error, follow `docs/ERROR_RECOVERY.md`
+   and stop.
 
-4. If the Task changed files under `src/` or `tests/`: bump `version` in
-   `pyproject.toml` AND `__version__` in `src/<package_name>/__init__.py`
-   per `docs/VERSIONING_RULES.md` (the two must be identical). Otherwise skip.
-5. If installation, configuration, or run commands changed: update `README.md`.
-   Otherwise skip.
-6. If a `.git` directory exists: commit all changes with a message naming the
-   Task. Otherwise skip (the setup track creates it).
-7. Print exactly these five lines with each `<...>` filled in — no extra text before or after — then stop:
+6. Print exactly these five lines with each `<...>` filled in — no extra text before or after — then stop. Copy the Commit value from the `Commit:` line the script printed:
 
    - Verify: <pass | fail>
    - STATE.md updated: <yes>
    - Version: <new number | no bump needed>
    - README: <updated | no change needed>
-   - Commit: <message | no .git yet>
+   - Commit: <the script's Commit line>
